@@ -1,22 +1,18 @@
 defmodule Mix.Tasks.Materialize.Install do
 	@moduledoc """
-	Install material-css
+	Install materialize package
 
 				mix materialize.install
-	
-	# Defaults:
 
-			* assets - copy js, css, and image files to *web/static/vendor/materialize*
-    	* brunch - append instructions to brunch-config.js
 	"""
 
-	# @shortdoc "Install materialixe-css"
+	# @shortdoc "Install materialize-css"
 
 	use Mix.Task
 
 	@doc "start task"
 	def run(_) do
-		IO.puts "Test install"
+		IO.puts "Install materialize-css"
 		do_run
 	end
 
@@ -48,14 +44,14 @@ defmodule Mix.Tasks.Materialize.Install do
 		copy_dir_r(npm_dist_path, web_vendor_path, "js")
 		copy_dir_r(npm_dist_path, web_assets_path, "fonts")
 
-		# case File.read "brunch-config.js" do
-  #     {:ok, file} ->
-  #       File.write! "brunch-config.js", file <> brunch_instructions()
-  #     error ->
-  #       Mix.raise """
-  #       Could not open brunch-config.js file. #{inspect error}
-  #       """
-  #   end
+#		 case File.read "brunch-config.js" do
+#       {:ok, file} ->
+#         File.write! "brunch-config.js", file <> brunch_instructions()
+#       error ->
+#         Mix.raise """
+#         Could not open brunch-config.js file. #{inspect error}
+#         """
+#     end
 	end
 
 	defp do_brunch do
@@ -84,6 +80,7 @@ defmodule Mix.Tasks.Materialize.Install do
     //     javascripts: {
     //       joinTo: {
     //         "js/app.js": /^(web\\/static\\/js)|(node_modules)/,
+    //				 "js/materialize.js": ["web/static/vendor/materialize/js/materialize.js"],
     //         "js/materialize.min.js": ["web/static/vendor/materialize/js/materialize.min.js"],
     //       }
     //     },
@@ -102,7 +99,8 @@ defmodule Mix.Tasks.Materialize.Install do
     //     stylesheets: {
     //       joinTo: {
     //         "css/app.css": /^(web\\/static\\/css)/,
-    //         "css/materialize.min.css": ["web/static/vendor/materialize/css/materialize.min..css"],
+    //  			 "css/materialize.css": ["web/static/vendor/materialize/css/materialize.css"],
+    //         "css/materialize.min.css": ["web/static/vendor/materialize/css/materialize.min.css"],
     //       },
     //       order: {
     //         after: ["web/static/css/app.css"] // concat app.css last

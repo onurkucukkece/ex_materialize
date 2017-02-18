@@ -1,7 +1,7 @@
 defmodule Materialize.Mixfile do
   use Mix.Project
 
-  @version "0.1.0-dev"
+  @version "0.1.0"
 
   def project do
     [app: :materialize,
@@ -38,7 +38,7 @@ defmodule Materialize.Mixfile do
 
   defp description do
     """
-    Add the materialixe-css package to your project.
+    Add the materialize-css package to your project.
     """
   end
 
