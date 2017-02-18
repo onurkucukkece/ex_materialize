@@ -134,18 +134,4 @@ defmodule Mix.Tasks.Materialize.Install do
 			"""
 		end
 	end
-
-	defp check_brunch do
-    unless File.exists? "brunch-config.js" do
-      Mix.raise """
-      Can't find brunch-config.js
-      """
-    end
-  end
-
-	defp raise_option(option) do
-    Mix.raise """
-    Invalid option --#{option}
-    """
-  end
 end

@@ -1,7 +1,5 @@
 defmodule Materialize do
   @moduledoc """
-  # Materialize
-
   This package install [materialize-css](http://materializecss.com/getting-started.html) to you project.
 
   ## Installation
@@ -15,7 +13,7 @@ defmodule Materialize do
   end
   ```
 
-  Hex you need get deps:
+  Next you need get deps:
 
   ```shell
   $ mix deps.get
@@ -29,7 +27,7 @@ defmodule Materialize do
 
   ### Result
 
-  Task **materialize.install** do net:
+  Task **materialize.install** do next:
 
   * npm - run npm install materialize-css --save-dev
   * dist - copy js, css files to *web/static/vendor/materialize*

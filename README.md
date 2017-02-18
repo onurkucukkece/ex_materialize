@@ -13,7 +13,7 @@ def deps do
 end
 ```
 
-Hex you need get deps:
+Next you need get deps:
 
 ```shell
 $ mix deps.get
@@ -27,7 +27,7 @@ $ mix materialize.install
 
 ### Result
 
-Task **materialize.install** do net:
+Task **materialize.install** do next:
 
 * npm - run npm install materialize-css --save-dev
 * dist - copy js, css files to *web/static/vendor/materialize*
