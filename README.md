@@ -9,7 +9,7 @@ by adding `materialize` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:materialize, "~> 0.1.0"}]
+  [{:materialize, "~> 0.1.1"}]
 end
 ```
 
