@@ -1,32 +1,153 @@
 defmodule Mix.Tasks.Materialize.Install do
-	use Mix.Task
-
 	@moduledoc """
 	Install material-css
+
+				mix materialize.install
+	
+	# Defaults:
+
+			* assets - copy js, css, and image files to *web/static/vendor/materialize*
+    	* brunch - append instructions to brunch-config.js
 	"""
+
+	# @shortdoc "Install materialixe-css"
+
+	use Mix.Task
 
 	@doc "start task"
 	def run(_) do
 		IO.puts "Test install"
+		do_run
 	end
 
-	@doc ""
-	defp assets do
-		
+	defp do_run do
+		npm_install
+		|> do_assets
+
+		do_brunch
 	end
 
-	@doc "upload resource"
-	defp upload_source do
+	defp npm_install do
+		System.cmd "npm", ["install", "materialize-css", "--save-dev"], into: IO.stream(:stdio, :line)
 		
+		npm_dist_path = Path.join(~w(node_modules materialize-css dist))
+		
+		chek_path(npm_dist_path, "\nTray run npm install materialize-css --save-dev")
+
+    npm_dist_path
 	end
 
-	@doc "move dist to web/static/vendor/materialize"
-	defp move_dist do
-		
+	defp do_assets(npm_dist_path) do
+		web_assets_path = Path.join(~w(web static assets))
+		web_vendor_path = Path.join(~w(web static vendor materialize))
+
+		File.mkdir_p web_assets_path
+		File.mkdir_p web_vendor_path
+
+		copy_dir_r(npm_dist_path, web_vendor_path, "css")
+		copy_dir_r(npm_dist_path, web_vendor_path, "js")
+		copy_dir_r(npm_dist_path, web_assets_path, "fonts")
+
+		# case File.read "brunch-config.js" do
+  #     {:ok, file} ->
+  #       File.write! "brunch-config.js", file <> brunch_instructions()
+  #     error ->
+  #       Mix.raise """
+  #       Could not open brunch-config.js file. #{inspect error}
+  #       """
+  #   end
 	end
 
-	@doc "configure brunch"
-	defp brunch_config do
-		
+	defp do_brunch do
+		case File.read "brunch-config.js" do
+      {:ok, file} ->
+        File.write! "brunch-config.js", file <> brunch_instructions()
+      error ->
+        Mix.raise """
+        Could not open brunch-config.js file. #{inspect error}
+        """
+    end
 	end
+
+	def brunch_instructions do
+    """
+    // To add the materialize generated assets to your brunch build, do the following:
+    //
+    // Replace
+    //
+    //     javascripts: {
+    //       joinTo: "js/app.js"
+    //     },
+    //
+    // With
+    //
+    //     javascripts: {
+    //       joinTo: {
+    //         "js/app.js": /^(web\\/static\\/js)|(node_modules)/,
+    //         "js/materialize.min.js": ["web/static/vendor/materialize/js/materialize.min.js"],
+    //       }
+    //     },
+    //
+    // Replace
+    //
+    //     stylesheets: {
+    //       joinTo: "css/app.css",
+    //       order: {
+    //         after: ["web/static/css/app.css"] // concat app.css last
+    //       }
+    //     },
+    //
+    // With
+    //
+    //     stylesheets: {
+    //       joinTo: {
+    //         "css/app.css": /^(web\\/static\\/css)/,
+    //         "css/materialize.min.css": ["web/static/vendor/materialize/css/materialize.min..css"],
+    //       },
+    //       order: {
+    //         after: ["web/static/css/app.css"] // concat app.css last
+    //       }
+    //     },
+    //
+    """
+  end
+
+	defp copy_dir_r(source_path, dist_path, dir) do
+		res_dist_path = Path.join([dist_path, dir])
+		
+		File.cp_r(Path.join([source_path, dir]), res_dist_path)
+
+		chek_path res_dist_path
+	end
+
+
+	defp chek_path(path) do
+		unless File.exists? path do
+			Mix.raise """
+			Can't find "#{path}"
+			"""
+		end
+	end
+
+	defp chek_path(path, text) do
+		unless File.exists? path do
+			Mix.raise """
+			Can't find "#{path}" #{text}
+			"""
+		end
+	end
+
+	defp check_brunch do
+    unless File.exists? "brunch-config.js" do
+      Mix.raise """
+      Can't find brunch-config.js
+      """
+    end
+  end
+
+	defp raise_option(option) do
+    Mix.raise """
+    Invalid option --#{option}
+    """
+  end
 end
