@@ -1,5 +1,5 @@
 defmodule Materialize.Components.Navbar do
-  @docmodule """
+  @moduledoc """
   Use module for generate HTML block navbar.
 
   Add alias in **/web/views/layout_view.ex** with configuration navbar:
@@ -45,7 +45,7 @@ defmodule Materialize.Components.Navbar do
   @ul_options [attr: [id: "nav-mobile", class: "right hide-on-med-and-down"]]
 
   @doc """
-  Create tag <span> or etc.
+  Create tag **span** or etc.
   
   ### Parameters
 

@@ -10,7 +10,7 @@ defmodule Materialize.Html do
 
   ### Example
 
-  Create link <a>:
+  Create link **a**:
 
   ```Elixie
   #{__MODULE__}.get_a [text: "Link", attr: [href: "#", class: "example"]]
@@ -22,7 +22,7 @@ defmodule Materialize.Html do
   <a href="#" class="example">Link</a>
   ```
 
-  Create tag <span>:
+  Create tag **span**:
 
   ```Elixie
   #{__MODULE__}.get_tag [tag: "span", text: "Text", attr: [class: "example"]]
@@ -34,7 +34,7 @@ defmodule Materialize.Html do
   <span class="example">Text</span>
   ```
 
-  Create list <ul>:
+  Create list **ul**:
 
   ```Elixie
   #{__MODULE__}.get_list [tag: "ul", attr: [class: "example"], items: [
@@ -54,7 +54,7 @@ defmodule Materialize.Html do
   """
 
   @doc """
-  Create link <a>
+  Create link **a**
   
   ### Parameters
 
@@ -73,7 +73,7 @@ defmodule Materialize.Html do
   end
 
   @doc """
-  Create tag <span> or etc.
+  Create tag **span** or etc.
   
   ### Parameters
 
@@ -95,7 +95,7 @@ defmodule Materialize.Html do
   end
 
   @doc """
-  Create list <ul>
+  Create list **ul**
   
   ### Parameters
 
