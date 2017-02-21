@@ -13,14 +13,14 @@ defmodule Mix.Tasks.Materialize.Install do
 	@doc "start task"
 	def run(_) do
 		IO.puts "Install materialize-css"
-		do_run
+		do_run()
 	end
 
 	defp do_run do
-		npm_install
+		npm_install()
 		|> do_assets
 
-		do_brunch
+		do_brunch()
 	end
 
 	defp npm_install do
@@ -43,15 +43,6 @@ defmodule Mix.Tasks.Materialize.Install do
 		copy_dir_r(npm_dist_path, web_vendor_path, "css")
 		copy_dir_r(npm_dist_path, web_vendor_path, "js")
 		copy_dir_r(npm_dist_path, web_assets_path, "fonts")
-
-#		 case File.read "brunch-config.js" do
-#       {:ok, file} ->
-#         File.write! "brunch-config.js", file <> brunch_instructions()
-#       error ->
-#         Mix.raise """
-#         Could not open brunch-config.js file. #{inspect error}
-#         """
-#     end
 	end
 
 	defp do_brunch do

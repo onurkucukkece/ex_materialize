@@ -1,7 +1,7 @@
 defmodule Materialize.Mixfile do
   use Mix.Project
 
-  @version "0.1.1"
+  @version "0.1.2-dev"
 
   def project do
     [app: :materialize,
@@ -10,7 +10,8 @@ defmodule Materialize.Mixfile do
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps(),
-     name: "materialixe",
+     name: "Materialize",
+     docs: [extras: ["README.md"], main: "Materialize"],
      description: description(),
      package: package()]
   end
