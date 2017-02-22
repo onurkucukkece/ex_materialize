@@ -41,7 +41,6 @@ defmodule Materialize.Components.Navbar do
   ```
 	"""
 
-	use Phoenix.HTML
   alias Materialize.Html
 
   @wrapper_options [attr: [class: "nav-wrapper"]]

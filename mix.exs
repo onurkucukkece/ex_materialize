@@ -1,7 +1,7 @@
 defmodule Materialize.Mixfile do
   use Mix.Project
 
-  @version "0.1.2-dev"
+  @version "0.1.3-dev"
 
   def project do
     [app: :materialize,
