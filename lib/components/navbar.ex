@@ -8,13 +8,16 @@ defmodule Materialize.Components.Navbar do
   alias #{__MODULE__}
 
   def navbar do
-    [items: [
-      [tag: "a", text: "Logo", attr: [href: "#", class: "brand-logo"]],
-      [tag: "ul", attr: [id: "nav-mobile", class: "right hide-on-med-and-down"], items: [
-        [tag: "a", text: "list 1", attr: [href: "#1"]],
-        [tag: "a", text: "list 2", attr: [href: "#2"]]
-      ]]
-    ]]
+    [
+      wrrape: [attr: [class: "nav-wrapper"]],
+      logo: [href: "#", text: "Logo", attr: [class: "brand-logo"]],
+      items: [
+        [tag: "ul", attr: [id: "nav-mobile", class: "right hide-on-med-and-down"], items: [
+          [tag: "a", text: "list 1", attr: [href: "#1"]],
+          [tag: "a", text: "list 2", attr: [href: "#2"]]
+        ]]
+      ]
+    ]
     |> Navbar.get_html()
   end
   ```
@@ -41,8 +44,10 @@ defmodule Materialize.Components.Navbar do
   alias Materialize.Html
 
   @wrapper_options [attr: [class: "nav-wrapper"]]
-  @logo_options [attr: [href: "#", class: "brand-logo"]]
-  @ul_options [attr: [id: "nav-mobile", class: "right hide-on-med-and-down"]]
+  @logo_options [tag: "a", text: "Logo", attr: [href: "#", class: "brand-logo"]]
+  @items_options [tag: "ul", attr: [id: "nav-mobile", class: "right hide-on-med-and-down"]]
+
+  # defstruct [wrapper: @wrapper_options, logo: @logo_options]
 
   @doc """
   Create tag **span** or etc.
@@ -54,27 +59,34 @@ defmodule Materialize.Components.Navbar do
   ### Example
 
   ```Elixie
-  #{__MODULE__}.get_html([items: [
-      [tag: "a", text: "Logo", attr: [href: "#", class: "brand-logo"]],
-      [tag: "ul", attr: [id: "nav-mobile", class: "right hide-on-med-and-down"], items: [
-        [tag: "a", text: "list 1", attr: [href: "#1"]],
-        [tag: "a", text: "list 2", attr: [href: "#2"]]
-      ]]
-    ]])
+  #{__MODULE__}.get_html([
+      wrrape: [attr: [class: "nav-wrapper"]],
+      logo: [href: "#", text: "Logo", attr: [class: "brand-logo"]],
+      items: [
+        [tag: "ul", attr: [id: "nav-mobile", class: "right hide-on-med-and-down"], items: [
+          [tag: "a", text: "list 1", attr: [href: "#1"]],
+          [tag: "a", text: "list 2", attr: [href: "#2"]]
+        ]]
+      ]
+    ])
   ```
   """
   @spec get_html(Keyword.t) :: List.t
 	def get_html(options) do
     options = check_options options
-    attr = Html.get_attribute options
-    [start: "<div#{attr}>", end: "</div>"]
+    attr = Html.get_attribute options[:wrapper]
+    logo = Html.get_tag(options[:logo])
+    [start: "<div#{attr}>#{logo}", end: "</div>"]
     |> get_items(options[:items])
   end
 
   defp get_items(html, options) when is_list options do
     for item <- options do 
       cond do
-        Html.has_key?(item, :items) -> Html.get_list item 
+        Html.has_key?(item, :items) -> 
+          item 
+          |> check_list() 
+          |> Html.get_list()
         true -> Html.get_tag item
       end
     end
@@ -87,17 +99,55 @@ defmodule Materialize.Components.Navbar do
   defp check_options(options) do
     options
     |> Enum.into(%{})
-    |> check_options_attr()
-    |> check_options_logo()
+    |> check_wrapper()
+    |> check_logo()
     |> Map.to_list()
   end
 
-  defp check_options_attr(options) do
-    Map.put_new(options, :attr, @wrapper_options[:attr])
+  defp check_wrapper(options) do
+    wrapper = 
+    cond do
+      Map.has_key?(options, :wrapper) -> 
+        options  
+        |> Map.fetch!(:wrapper)
+        |> Enum.into(%{})
+        |> Map.put_new(:attr, @wrapper_options[:attr])
+        |> Map.to_list()
+      true -> @wrapper_options
+    end
+    Map.put_new(options, :wrapper, wrapper)
   end
 
-  # TODO add default attributes to logo if need 
-  defp check_options_logo(options) do
-    options
+  defp check_logo(options) do
+    logo = 
+    cond do
+      Map.has_key?(options, :logo) -> 
+        options  
+        |> Map.fetch!(:logo)
+        |> Enum.into(%{})
+        |> Map.put_new(:tag, @logo_options[:tag])
+        |> Map.put_new(:text, @logo_options[:text])
+        |> Map.put_new(:attr, @logo_options[:attr])
+        |> Map.to_list()
+      true -> @logo_options
+    end
+    Map.put_new(options, :logo, logo)
+  end
+
+  defp check_list(item) do
+    item = Enum.into(item, %{})
+    
+    attr = cond do 
+      Map.has_key?(item, :attr) -> 
+        item[:attr]
+        |> Enum.into(%{})
+        |> Map.put_new(:id, @items_options[:attr][:id])
+        |> Map.put_new(:class, @items_options[:attr][:class])
+        |> Map.to_list()
+      true -> @items_options[:attr]
+    end
+    Map.put(item, :attr, attr)
+    |> Map.put_new(:tag, @items_options[:tag])
+    |> Map.to_list()
   end
 end
