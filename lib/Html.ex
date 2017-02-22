@@ -53,6 +53,8 @@ defmodule Materialize.Html do
   ```
   """
 
+  @default_list [tag: "ul"]
+
   @doc """
   Create link **a**
   
@@ -112,11 +114,19 @@ defmodule Materialize.Html do
   """
   @spec get_list(Keyword.t) :: List.t
   def get_list(item) do
+    item = check_list item
     attr = get_attribute item
     for item <- item[:items] do get_tag(item) end
     |> Enum.map(&("<li>#{&1}</li>"))
     |> Enum.join("")
     |> do_wrapp([start: "<#{item[:tag]}#{attr}>", end: "</#{item[:tag]}>"])
+  end
+
+  defp check_list(item) do
+    item 
+    |> Enum.into(%{})
+    |> Map.put_new(:tag, @default_list[:tag])
+    |> Map.to_list()
   end
 
   @doc """
