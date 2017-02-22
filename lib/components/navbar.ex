@@ -87,7 +87,7 @@ defmodule Materialize.Components.Navbar do
           item 
           |> check_list() 
           |> Html.get_list()
-        true -> Html.get_tag item
+        true -> Html.get_tag(item)
       end
     end
     |> Enum.join("")

@@ -13,6 +13,7 @@ defmodule Materialize.Html do
   Create link **a**:
 
   ```Elixie
+  #{__MODULE__}.get_a("Link", "#", [class: "example"])
   #{__MODULE__}.get_a [text: "Link", attr: [href: "#", class: "example"]]
   ```
 
@@ -25,6 +26,7 @@ defmodule Materialize.Html do
   Create tag **span**:
 
   ```Elixie
+  #{__MODULE__}.get_tag("span", "Text", [class: "example"])
   #{__MODULE__}.get_tag [tag: "span", text: "Text", attr: [class: "example"]]
   ```
 
@@ -60,10 +62,27 @@ defmodule Materialize.Html do
   
   ### Parameters
 
-    - item: keyword list
+    - text: text link
+    - href: ulr link
+    - attr: keyword list
 
   ### Example
 
+  ```Elixie
+  #{__MODULE__}.get_a("Link", "#", [class: "example"])
+  ```
+  """
+  @spec get_a(String.t, String.t, Keyword.t) :: List.t
+  def get_a(text, href, attr \\ []) do
+    ~s(<#a href="#{}"#{render_attribute(attr)}>#{text}</#a>)
+  end
+
+  @doc """
+  Create link **a**
+  
+  ### Parameters
+    - item: keyword list
+  ### Example
   ```Elixie
   #{__MODULE__}.get_a [text: "Link", attr: [href: "#", class: "example"]]
   ```
@@ -79,10 +98,27 @@ defmodule Materialize.Html do
   
   ### Parameters
 
-    - item: keyword list
+    - tag: tag, *span, i, p* ... etc.
+    - text: text into tag
+    - attr: keyword list html attributes 
 
   ### Example
 
+  ```Elixie
+  #{__MODULE__}.get_tag("span", "Text", [class: "example"])
+  ```
+  """
+  @spec get_tag(String.t, String.t, Keyword.t) :: List.t
+  def get_tag(tag, text, attr \\ []) do
+    ~s(<#{tag}#{render_attribute(attr)}>#{text}</#{tag}>)
+  end
+
+  @doc """
+  Create tag **span** or etc.
+  
+  ### Parameters
+    - item: keyword list
+  ### Example
   ```Elixie
   #{__MODULE__}.get_tag [tag: "span", text: "Text", attr: [class: "example"]]
   ```
