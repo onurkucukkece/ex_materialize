@@ -41,6 +41,7 @@ defmodule Materialize.Components.Navbar do
   ```
 	"""
 
+	use Phoenix.HTML
   alias Materialize.Html
 
   @wrapper_options [attr: [class: "nav-wrapper"]]
@@ -98,56 +99,45 @@ defmodule Materialize.Components.Navbar do
 
   defp check_options(options) do
     options
-    |> Enum.into(%{})
     |> check_wrapper()
     |> check_logo()
-    |> Map.to_list()
   end
 
   defp check_wrapper(options) do
     wrapper = 
     cond do
-      Map.has_key?(options, :wrapper) -> 
+      Keyword.has_key?(options, :wrapper) ->
         options  
-        |> Map.fetch!(:wrapper)
-        |> Enum.into(%{})
-        |> Map.put_new(:attr, @wrapper_options[:attr])
-        |> Map.to_list()
+        |> Keyword.fetch!(:wrapper)
+        |> Keyword.put_new(:attr, @wrapper_options[:attr])
       true -> @wrapper_options
     end
-    Map.put_new(options, :wrapper, wrapper)
+    Keyword.put_new(options, :wrapper, wrapper)
   end
 
   defp check_logo(options) do
     logo = 
     cond do
-      Map.has_key?(options, :logo) -> 
+      Keyword.has_key?(options, :logo) ->
         options  
-        |> Map.fetch!(:logo)
-        |> Enum.into(%{})
-        |> Map.put_new(:tag, @logo_options[:tag])
-        |> Map.put_new(:text, @logo_options[:text])
-        |> Map.put_new(:attr, @logo_options[:attr])
-        |> Map.to_list()
+        |> Keyword.fetch!(:logo)
+        |> Keyword.put_new(:tag, @logo_options[:tag])
+        |> Keyword.put_new(:text, @logo_options[:text])
+        |> Keyword.put_new(:attr, @logo_options[:attr])
       true -> @logo_options
     end
-    Map.put_new(options, :logo, logo)
+    Keyword.put_new(options, :logo, logo)
   end
 
   defp check_list(item) do
-    item = Enum.into(item, %{})
-    
     attr = cond do 
-      Map.has_key?(item, :attr) -> 
+      Keyword.has_key?(item, :attr) ->
         item[:attr]
-        |> Enum.into(%{})
-        |> Map.put_new(:id, @items_options[:attr][:id])
-        |> Map.put_new(:class, @items_options[:attr][:class])
-        |> Map.to_list()
+        |> Keyword.put_new(:id, @items_options[:attr][:id])
+        |> Keyword.put_new(:class, @items_options[:attr][:class])
       true -> @items_options[:attr]
     end
-    Map.put(item, :attr, attr)
-    |> Map.put_new(:tag, @items_options[:tag])
-    |> Map.to_list()
+    Keyword.put(item, :attr, attr)
+    |> Keyword.put_new(:tag, @items_options[:tag])
   end
 end

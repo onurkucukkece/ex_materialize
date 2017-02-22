@@ -159,10 +159,8 @@ defmodule Materialize.Html do
   end
 
   defp check_list(item) do
-    item 
-    |> Enum.into(%{})
-    |> Map.put_new(:tag, @default_list[:tag])
-    |> Map.to_list()
+    item
+    |> Keyword.put_new(:tag, @default_list[:tag])
   end
 
   @doc """
@@ -219,7 +217,7 @@ defmodule Materialize.Html do
   """
   @spec has_key?(Keyword.t, Atom.t) :: boolean
   def has_key?(item, attr) do
-    Enum.any?(item, fn({k, _}) -> k == attr end) && cond do
+    Keyword.has_key?(item, attr) && cond do
       is_list item[attr] -> length(item[attr]) > 0
       is_binary item[attr] -> String.length(item[attr]) > 0
       true -> false
