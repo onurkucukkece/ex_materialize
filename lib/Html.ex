@@ -124,7 +124,7 @@ defmodule Materialize.Html do
   ```
   """
   @spec get_tag(Keyword.t) :: List.t
-  def get_tag(item) do
+  def get_tag(item) when is_list item do
     attr = get_attribute item
     cond do
       has_key?(item, :tag) -> "<#{item[:tag]}#{attr}>#{item[:text]}</#{item[:tag]}>"
