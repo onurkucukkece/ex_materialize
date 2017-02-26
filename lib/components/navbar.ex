@@ -66,7 +66,7 @@ defmodule Materialize.Components.Navbar do
   ```Elixir
   [id: "nav-mobile", class: "right hide-on-med-and-down"] # in not set class or id
   ``` 
-	"""
+  """
 
   alias Materialize.Html
   use Phoenix.HTML
@@ -114,8 +114,8 @@ defmodule Materialize.Components.Navbar do
     end
 
     # result navbar block
-    content_tag(:div, wrap) do
-      [logo] ++ list
+    content_tag(:nav) do
+      content_tag(:div, wrap), do: [logo] ++ list
     end
   end
 
@@ -190,7 +190,7 @@ defmodule Materialize.Components.Navbar do
   end
 
   # get list, example <ul>
-  defp get_item(tag, content, attr) when is_list(content) do
+  defp get_item(_, content, _) when is_list(content) do
     for item <- content do
       {tag, content, attr} = parse_item(item)
       content_tag(:li, get_item(tag, content, attr))
