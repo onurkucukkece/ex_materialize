@@ -9,7 +9,7 @@ defmodule Materialize.Components.Navbar do
 
   def navbar do
     [
-      [:wrap ,class: "nav-wrapper"],
+      [:wrap, [class: "nav-wrapper"], [class: "col s12"]],
       [:logo, class: "brand-logo"]
       [:ul, [
         [:a, "list 1", [href: "#1"]],
@@ -89,7 +89,7 @@ defmodule Materialize.Components.Navbar do
 
   ```Elixie
   #{__MODULE__}.get_html([
-      [:wrap ,class: "nav-wrapper"],
+      [:wrap, [class: "nav-wrapper"], [class: "col s12"]],
       [:logo, class: "brand-logo"]
       [:ul, [
         [:a, "list 1", [href: "#1"]],
@@ -102,7 +102,7 @@ defmodule Materialize.Components.Navbar do
   def get_html(opts) do
     {opts, wrap} = get_element(opts, :wrap)
     {opts, logo} = get_element(opts, :logo)
-    wrap = Keyword.merge(wrap, @wrap_options)
+    wrap = prepare_wrapper(wrap)
     logo = content_logo([:a] ++ logo)
 
     list = for item <- opts do
@@ -115,14 +115,39 @@ defmodule Materialize.Components.Navbar do
 
     # result navbar block
     content_tag(:nav) do
-      content_tag(:div, wrap), do: [logo] ++ list
+      content = [logo] ++ list
+      do_wrap(wrap, content)
     end
   end
+
+  defp do_wrap(wrap, content) do
+    wrapper = List.last(wrap)
+    wrap = wrap -- [wrapper]
+
+    if (length(wrap) > 0) do
+      content = content_tag(:div, content, wrapper)
+      do_wrap(wrap, content)
+    else
+      content_tag(:div, content, wrapper)
+    end
+  end 
 
   # get element: wrap or logo
   defp get_element(opts, member) do
     element = Enum.find(opts, [], fn(x) -> Enum.member?(x, member) end)
     {opts -- [element], element -- [member]}
+  end
+
+  defp prepare_wrapper(wrap) do
+    for item <- wrap do
+      attr = get_attr(item)
+
+      if (List.first(wrap) === item) do
+        attr = Keyword.merge(@wrap_options, attr)
+      end
+
+      attr
+    end
   end
 
   # get link

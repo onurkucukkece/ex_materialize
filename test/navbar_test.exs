@@ -7,6 +7,7 @@ defmodule NavbarTest do
 
   test "check get html" do
 		[
+      [:wrap, [class: "nav-wrapper"], [class: "col s12"]],
       [:logo, "Steam API", class: "qwerty"],
       [:ul, [
         [:a, "list 1", [href: "#1"]],
