@@ -1,55 +1,88 @@
 defmodule Materialize.Component do
-  @docmodule """
-  	TODO
-	"""
+  @moduledoc """
+  Use materialize-css components
 
-	import Materialize.Components.Navbar
+  ### [Navbar](https://hexdocs.pm/materialize/0.1.4-dev/Materialize.Components.Navbar.html#content)
 
-	def bage do
+  Add alias in **/web/views/layout_view.ex** with configuration navbar:
 
-	end
+  ```Elixir
+  use #{__MODULE__}
 
-	def button do
+  def navbar(conn) do
+    navbar([
+      [:wrap, [class: "nav-wrapper"], [class: "col s12"]],
+      [:logo, class: "brand-logo"]
+      [:ul, [
+        [:a, "list 1", [href: "#1"]],
+        [:a, "list 2", [href: "#2"]]
+      ], [id: "id-link"]] 
+    ])
+  end
+  ```
 
-	end
+  Use navbar in templates:
+  
+  ```Elixir
+  <div class="row"><%= navbar(@conn) %></div>
+  ```
+  """
 
-	def breadcrumbs do
+  import Materialize.Components.Navbar
 
-	end
+  @doc false
+  defmacro __using__(_) do
+    quote do
+      import Materialize.Components.Navbar
+      # TODO import oyher components
+    end
+  end
 
-	def card do
+  def bage do
 
-	end
+  end
 
-	def chip do
+  def button do
 
-	end
+  end
 
-	def collection do
+  def breadcrumbs do
 
-	end
+  end
 
-	def footer do
+  def card do
 
-	end
+  end
 
-	def form do
+  def chip do
 
-	end
+  end
 
-	def icon do
+  def collection do
 
-	end
+  end
 
-	def navbar(config) do
-		get_html(config)
-	end
+  def footer do
 
-	def pagimation do
+  end
 
-	end
+  def form do
 
-	def preloader do
+  end
 
-	end
+  def icon do
+
+  end
+
+  def navbar(config) do
+    Navbar.get_html(config)
+  end
+
+  def pagimation do
+
+  end
+
+  def preloader do
+
+  end
 end

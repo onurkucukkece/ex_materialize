@@ -7,35 +7,36 @@ defmodule Materialize.Components.Navbar do
   ```Elixir
   alias #{__MODULE__}
 
-  def navbar do
-    [
+  def navbar(conn) do
+    Navbar.get_html([
       [:wrap, [class: "nav-wrapper"], [class: "col s12"]],
       [:logo, class: "brand-logo"]
       [:ul, [
         [:a, "list 1", [href: "#1"]],
         [:a, "list 2", [href: "#2"]]
       ], [id: "id-link"]] 
-    ]
-    |> Navbar.get_html()
+    ])
   end
   ```
 
   Use navbar in templates:
   
   ```Elixir
-  <%= navbar %>
+  <div class="row"><%= navbar(@conn) %></div>
   ```
 
   Result
 
   ```Html
-  <div class="nav-wrapper">
-    <a href="#" class="brand-logo">Logo</a>
-    <ul id="nav-mobile" class="right hide-on-med-and-down">
-      <li><a href="#1">list 1</a></li>
-      <li><a href="#2">list 2</a></li>
-    </ul>
-  </div>
+  <nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo">Logo</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="#1">list 1</a></li>
+        <li><a href="#2">list 2</a></li>
+      </ul>
+    </div>
+  </nav>
   ```
 
   ### Default attributes
@@ -45,8 +46,26 @@ defmodule Materialize.Components.Navbar do
   #### Wrapper
 
   ```Elixir
-  [class: "nav-wrapper"] # set class if not set
+  [class: "nav-wrapper"] # set class if not set for first wrapper
   ```
+
+  If you need some wrappers
+  
+  ```Elixir
+  [:wrap, [class: "nav-wrapper"], [class: "col s12"]]
+  ```
+
+  Result
+
+  ```Html
+  <nav>
+    <div class="nav-wrapper"> <!--- wrapper 1 -->
+      <div class="col s12">   <!--- wrapper 2 -->
+        <!--- other elements --->
+      </div>
+    </div>
+  </nav>
+```
 
   #### Logo
 
@@ -62,7 +81,7 @@ defmodule Materialize.Components.Navbar do
   "Logo" # if not set
   ```
 
-  #### List (<ul> elements for menu)
+  #### List (**ul** elements for menu)
   ```Elixir
   [id: "nav-mobile", class: "right hide-on-med-and-down"] # in not set class or id
   ``` 
@@ -120,6 +139,7 @@ defmodule Materialize.Components.Navbar do
     end
   end
 
+  # apply all wrappers
   defp do_wrap(wrap, content) do
     wrapper = List.last(wrap)
     wrap = wrap -- [wrapper]
@@ -132,12 +152,7 @@ defmodule Materialize.Components.Navbar do
     end
   end 
 
-  # get element: wrap or logo
-  defp get_element(opts, member) do
-    element = Enum.find(opts, [], fn(x) -> Enum.member?(x, member) end)
-    {opts -- [element], element -- [member]}
-  end
-
+  # prepare wrappers
   defp prepare_wrapper(wrap) do
     for item <- wrap do
       attr = get_attr(item)
@@ -148,6 +163,12 @@ defmodule Materialize.Components.Navbar do
 
       attr
     end
+  end
+
+  # get element: wrap or logo
+  defp get_element(opts, member) do
+    element = Enum.find(opts, [], fn(x) -> Enum.member?(x, member) end)
+    {opts -- [element], element -- [member]}
   end
 
   # get link
