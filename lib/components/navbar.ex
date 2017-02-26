@@ -134,7 +134,7 @@ defmodule Materialize.Components.Navbar do
   defp get_item(tag, content, attr) when is_list(content) do
     for item <- content do
       {tag, content, attr} = parse_item(item)
-      get_item(tag, content, attr)
+      content_tag(:li, get_item(tag, content, attr))
     end
   end
 end
