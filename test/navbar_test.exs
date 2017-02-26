@@ -6,12 +6,14 @@ defmodule NavbarTest do
   doctest Materialize.Components.Navbar
 
   test "check get html" do
-		[items: [
-      [attr: [id: "qqq"], items: [
-        [tag: "a", text: "list 1", attr: [href: "#1"]],
-        [tag: "a", text: "list 2", attr: [href: "#2"]]]
-      ] 
-    ]]
+		[
+      [:wrap ,id: "wp-class"],
+      [:logo, class: "l-class"],
+      [:ul, [
+        [:a, "list 1", [href: "#1"]],
+        [:a, "list 2", [href: "#2"]]
+      ], [id: "qqq"]]
+    ]
     |> Navbar.get_html()
     |> IO.inspect()
   end

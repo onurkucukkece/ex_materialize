@@ -9,14 +9,12 @@ defmodule Materialize.Components.Navbar do
 
   def navbar do
     [
-      wrrape: [attr: [class: "nav-wrapper"]],
-      logo: [href: "#", text: "Logo", attr: [class: "brand-logo"]],
-      items: [
-        [tag: "ul", attr: [id: "nav-mobile", class: "right hide-on-med-and-down"], items: [
-          [tag: "a", text: "list 1", attr: [href: "#1"]],
-          [tag: "a", text: "list 2", attr: [href: "#2"]]
-        ]]
-      ]
+      [:wrap ,class: "wp-class"],
+      [:logo, class: "l-class"]
+      [:ul, [
+        [:a, "list 1", [href: "#1"]],
+        [:a, "list 2", [href: "#2"]]
+      ], [id: "qqq"]]
     ]
     |> Navbar.get_html()
   end
@@ -42,10 +40,11 @@ defmodule Materialize.Components.Navbar do
 	"""
 
   alias Materialize.Html
+  use Phoenix.HTML
 
-  @wrapper_options [attr: [class: "nav-wrapper"]]
-  @logo_options [tag: "a", text: "Logo", attr: [href: "#", class: "brand-logo"]]
-  @items_options [tag: "ul", attr: [id: "nav-mobile", class: "right hide-on-med-and-down"]]
+  @wrap_options [class: "nav-wrapper"]
+  @logo_options [href: "#", class: "brand-logo"]
+  @list_options [id: "nav-mobile", class: "right hide-on-med-and-down"]
 
   # defstruct [wrapper: @wrapper_options, logo: @logo_options]
 
@@ -60,83 +59,84 @@ defmodule Materialize.Components.Navbar do
 
   ```Elixie
   #{__MODULE__}.get_html([
-      wrrape: [attr: [class: "nav-wrapper"]],
-      logo: [href: "#", text: "Logo", attr: [class: "brand-logo"]],
-      items: [
-        [tag: "ul", attr: [id: "nav-mobile", class: "right hide-on-med-and-down"], items: [
-          [tag: "a", text: "list 1", attr: [href: "#1"]],
-          [tag: "a", text: "list 2", attr: [href: "#2"]]
-        ]]
-      ]
+      [:wrap ,class: "wp-class"],
+      [:logo, class: "l-class"]
+      [:ul, [
+        [:a, "list 1", [href: "#1"]],
+        [:a, "list 2", [href: "#2"]]
+      ], [id: "qqq"]] 
     ])
   ```
   """
-  @spec get_html(Keyword.t) :: List.t
-	def get_html(options) do
-    options = check_options options
-    attr = Html.get_attribute options[:wrapper]
-    logo = Html.get_tag(options[:logo])
-    [start: "<div#{attr}>#{logo}", end: "</div>"]
-    |> get_items(options[:items])
-  end
+  def get_html(opts) do
+    {opts, wrap} = get_element(opts, :wrap, @wrap_options)
+    {opts, logo} = get_element(opts, :logo, @logo_options)
 
-  defp get_items(html, options) when is_list options do
-    for item <- options do 
-      cond do
-        Html.has_key?(item, :items) -> 
-          item 
-          |> check_list() 
-          |> Html.get_list()
-        true -> Html.get_tag(item)
+    for item <- opts do
+      if (Enum.member?(item, :ul)) do
+        {tag, content, attr} = parse_item(item)
+        content = get_item(tag, content, attr)
+        content_tag(tag, content, attr)
       end
     end
-    |> Enum.join("")
-    |> do_wrapp(html)
   end
 
-  defp do_wrapp(body, html), do: "#{html[:start]}#{body}#{html[:end]}"
-
-  defp check_options(options) do
-    options
-    |> check_wrapper()
-    |> check_logo()
+  defp get_element(opts, member, default) do
+    element = Enum.find(opts, [], fn(x) -> Enum.member?(x, member) end)
+    {opts -- [element], Keyword.merge(default, element -- [member])}
   end
 
-  defp check_wrapper(options) do
-    wrapper = 
-    cond do
-      Keyword.has_key?(options, :wrapper) ->
-        options  
-        |> Keyword.fetch!(:wrapper)
-        |> Keyword.put_new(:attr, @wrapper_options[:attr])
-      true -> @wrapper_options
+  defp parse_item(opts) do
+    tag = get_tag(opts)
+    content = get_content(opts)
+    attr = get_attr(opts)
+
+    {tag, content, attr}
+  end
+
+  defp get_tag(item) do
+    error = "Element #{inspect(item)} has not tag"
+
+    with {:ok, tag} <- Enum.fetch(item, 0), true <- is_atom(tag) do
+        tag
+    else
+      :error -> raise(ArgumentError, error)
+      false -> raise(ArgumentError, error)
     end
-    Keyword.put_new(options, :wrapper, wrapper)
   end
 
-  defp check_logo(options) do
-    logo = 
-    cond do
-      Keyword.has_key?(options, :logo) ->
-        options  
-        |> Keyword.fetch!(:logo)
-        |> Keyword.put_new(:tag, @logo_options[:tag])
-        |> Keyword.put_new(:text, @logo_options[:text])
-        |> Keyword.put_new(:attr, @logo_options[:attr])
-      true -> @logo_options
+  defp get_content(item) do
+    error = "Element #{inspect(item)} has not content"
+
+    with {:ok, content} <- Enum.fetch(item, 1) do
+        content
+    else
+      :error -> ""
+      false -> raise(ArgumentError, error)
     end
-    Keyword.put_new(options, :logo, logo)
   end
 
-  defp check_list(item) do
-    attr = cond do 
-      Keyword.has_key?(item, :attr) ->
-        item[:attr]
-        |> Keyword.put_new(:id, @items_options[:attr][:id])
-        |> Keyword.put_new(:class, @items_options[:attr][:class])
-      true -> @items_options[:attr]
+  defp get_attr(item) do
+    error = "Error get attributes in element #{inspect(item)}"
+
+    with {:ok, attr} <- Enum.fetch(item, 2), true <- is_list(attr) do
+        Keyword.merge(@list_options, attr)
+    else
+      :error -> @list_options
+      false -> raise(ArgumentError, error)
     end
-    Keyword.put(item, :attr, attr)
-    |> Keyword.put_new(:tag, @items_options[:tag])
+  end
+
+  defp get_item(tag, content, attr) when is_binary(content) do
+    content_tag(tag, content, attr)
+  end
+
+  defp get_item(tag, content, attr) when is_list(content) do
+    list = for item <- content do
+      {tag, content, attr} = parse_item(item)
+      get_item(tag, content, attr)
+    end
+
+    content_tag(tag, list, attr)
   end
 end
