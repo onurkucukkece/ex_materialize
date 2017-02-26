@@ -7,12 +7,11 @@ defmodule NavbarTest do
 
   test "check get html" do
 		[
-      [:wrap ,id: "wp-class"],
-      [:logo, class: "l-class"],
+      [:logo, "Steam API", class: "qwerty", id: "sss"],
       [:ul, [
         [:a, "list 1", [href: "#1"]],
         [:a, "list 2", [href: "#2"]]
-      ], [id: "qqq"]]
+      ]]
     ]
     |> Navbar.get_html()
     |> IO.inspect()
