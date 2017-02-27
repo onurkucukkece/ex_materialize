@@ -162,8 +162,13 @@ defmodule Materialize.Components.Navbar do
     end
   end 
 
+  defp prepare_wrapper(wrap) when length(wrap) == 0 do
+    [Keyword.merge(@wrap_options, wrap)]
+    |> prepare_wrapper()
+  end
+
   # prepare wrappers
-  defp prepare_wrapper(wrap) do
+  defp prepare_wrapper(wrap) when is_list(wrap) do
     for item <- wrap do
       attr = get_attr(item)
 
@@ -191,7 +196,7 @@ defmodule Materialize.Components.Navbar do
   defp parse_item(opts, default_text \\ "", default_attr \\ []) do
     {opts, tag} = get_tag(opts)
     {opts, content} = get_content(opts, default_text)
-    attr = Enum.reverse(get_attr(opts, default_attr))
+    attr = get_attr(opts, default_attr)
 
     {tag, content, attr}
   end
@@ -214,10 +219,8 @@ defmodule Materialize.Components.Navbar do
   defp get_content(item, default_text \\ "") do
     error = "Element #{inspect(item)} has not content"
 
-    # TODO неверно срабатывает поиск и вычитание контента
-    # :error и соответственно default_text никогда не отрабатывают
-
-    with {:ok, content} <- Enum.fetch(item, 0) do
+    case Enum.fetch(item, 0) do
+      {:ok, content} -> 
         item = item -- [content]
 
         case content do
@@ -227,14 +230,14 @@ defmodule Materialize.Components.Navbar do
         end
 
         {item, content}
-    else
       :error -> {item, default_text}
+      _ -> raise(ArgumentError, error)
     end
   end
 
   # get attribute from [class: "example"] or {:class, "example"}
   defp get_attr(item, default_attr \\ []) do
-    error = "Error get attributes in element #{inspect(item)}"
+    # error = "Error get attributes in element #{inspect(item)}"
 
     # if attributes set as keyword
     attr = with {:ok, attr} <- Enum.fetch(item, 0) do
@@ -248,7 +251,7 @@ defmodule Materialize.Components.Navbar do
       :error -> []
     end
 
-    Keyword.merge(default_attr, attr) |> Enum.reverse()
+    Keyword.merge(default_attr, attr)
   end
 
   # get one element, example <a>
