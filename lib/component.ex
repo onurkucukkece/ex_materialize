@@ -10,7 +10,7 @@ defmodule Materialize.Component do
   use #{__MODULE__}
 
   def navbar(conn) do
-    get_html([
+    navbar([
       [:wrap, [class: "nav-wrapper"], [class: "col s12"]],
       [:logo, class: "brand-logo"],
       [:ul, [
@@ -28,7 +28,7 @@ defmodule Materialize.Component do
   ```
   """
 
-  import Materialize.Components.Navbar
+  alias Materialize.Components.Navbar
 
   @doc false
   defmacro __using__(_) do

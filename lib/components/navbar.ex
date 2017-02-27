@@ -31,12 +31,23 @@ defmodule Materialize.Components.Navbar do
   <nav>
     <div class="nav-wrapper">
       <a href="#" class="brand-logo">Logo</a>
-      <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <ul class="right hide-on-med-and-down" id="nav-mobile" >
         <li><a href="#1">list 1</a></li>
         <li><a href="#2">list 2</a></li>
       </ul>
     </div>
   </nav>
+  ```
+
+  ## Notice!
+
+  All attributes of the element, the module *Phoenix.HTML* sorts in alphabetical order
+
+  ```Elixir
+  # set
+  [:a, "link", [id: "example-id", class: "example-class", target: "_blank"]]
+  # get
+  <a class="example-class" id="example-id" target="_blank">link</a>
   ```
 
   ### Default attributes
@@ -87,7 +98,6 @@ defmodule Materialize.Components.Navbar do
   ``` 
   """
 
-  alias Materialize.Html
   use Phoenix.HTML
 
   @wrap_options [class: "nav-wrapper"]
@@ -158,10 +168,10 @@ defmodule Materialize.Components.Navbar do
       attr = get_attr(item)
 
       if (List.first(wrap) === item) do
-        attr = Keyword.merge(@wrap_options, attr)
+        Keyword.merge(@wrap_options, attr)
+      else 
+        attr
       end
-
-      attr
     end
   end
 
@@ -173,7 +183,7 @@ defmodule Materialize.Components.Navbar do
 
   # get link
   defp content_logo(logo) do
-    {tag, content, attr} = parse_item([:a] ++ [logo], @logo_name, @logo_options)
+    {tag, content, attr} = parse_item([:a] ++ logo, @logo_name, @logo_options)
     content_tag(tag, content, attr)
   end
 
@@ -181,7 +191,7 @@ defmodule Materialize.Components.Navbar do
   defp parse_item(opts, default_text \\ "", default_attr \\ []) do
     {opts, tag} = get_tag(opts)
     {opts, content} = get_content(opts, default_text)
-    attr = get_attr(opts, default_attr)
+    attr = Enum.reverse(get_attr(opts, default_attr))
 
     {tag, content, attr}
   end
@@ -197,21 +207,29 @@ defmodule Materialize.Components.Navbar do
       false -> raise(ArgumentError, error)
     end
 
-    {List.flatten(item -- [tag]), tag}
+    {item -- [tag], tag}
   end
 
   # teg text or default text
   defp get_content(item, default_text \\ "") do
     error = "Element #{inspect(item)} has not content"
 
-    content = with {:ok, content} <- Enum.fetch(item, 0), true <- is_binary(content) do
-        content
-    else
-      :error -> default_text
-      false -> default_text # raise(ArgumentError, error)
-    end
+    # TODO неверно срабатывает поиск и вычитание контента
+    # :error и соответственно default_text никогда не отрабатывают
 
-    {List.flatten(item -- [content]), content}
+    with {:ok, content} <- Enum.fetch(item, 0) do
+        item = item -- [content]
+
+        case content do
+          content when is_binary(content) -> content 
+          content when is_list(content) -> get_item(nil, content, nil)
+          _ -> raise(ArgumentError, error)
+        end
+
+        {item, content}
+    else
+      :error -> {item, default_text}
+    end
   end
 
   # get attribute from [class: "example"] or {:class, "example"}
@@ -219,15 +237,18 @@ defmodule Materialize.Components.Navbar do
     error = "Error get attributes in element #{inspect(item)}"
 
     # if attributes set as keyword
-    attr = with {:ok, attr} <- Enum.fetch(item, 0), true <- is_list(attr) do
-        attr
+    attr = with {:ok, attr} <- Enum.fetch(item, 0) do
+        if (is_list(attr)) do
+          attr
+        else 
+          for el <- item, is_tuple(el), do: el
+        end
     # if attributes set as tuples
     else
       :error -> []
-      false -> for el <- item, is_tuple(el), do: el
     end
 
-    Keyword.merge(default_attr, attr)
+    Keyword.merge(default_attr, attr) |> Enum.reverse()
   end
 
   # get one element, example <a>
@@ -236,8 +257,8 @@ defmodule Materialize.Components.Navbar do
   end
 
   # get list, example <ul>
-  defp get_item(_, content, _) when is_list(content) do
-    for item <- content do
+  defp get_item(_, list, _) when is_list(list) do
+    for item <- list do
       {tag, content, attr} = parse_item(item)
       content_tag(:li, get_item(tag, content, attr))
     end
