@@ -10,7 +10,7 @@ defmodule Materialize.Component do
   use #{__MODULE__}
 
   def navbar(conn) do
-    navbar([
+    get_html([
       [:wrap, [class: "nav-wrapper"], [class: "col s12"]],
       [:logo, class: "brand-logo"],
       [:ul, [

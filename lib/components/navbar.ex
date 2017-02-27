@@ -5,10 +5,10 @@ defmodule Materialize.Components.Navbar do
   Add alias in **/web/views/layout_view.ex** with configuration navbar:
   
   ```Elixir
-  alias #{__MODULE__}
+  use #{__MODULE__}
 
   def navbar(conn) do
-    Navbar.get_html([
+    get_html([
       [:wrap, [class: "nav-wrapper"], [class: "col s12"]],
       [:logo, class: "brand-logo"],
       [:ul, [
