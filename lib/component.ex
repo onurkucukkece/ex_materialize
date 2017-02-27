@@ -12,7 +12,7 @@ defmodule Materialize.Component do
   def navbar(conn) do
     navbar([
       [:wrap, [class: "nav-wrapper"], [class: "col s12"]],
-      [:logo, class: "brand-logo"]
+      [:logo, class: "brand-logo"],
       [:ul, [
         [:a, "list 1", [href: "#1"]],
         [:a, "list 2", [href: "#2"]]

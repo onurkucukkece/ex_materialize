@@ -10,7 +10,7 @@ defmodule Materialize.Components.Navbar do
   def navbar(conn) do
     Navbar.get_html([
       [:wrap, [class: "nav-wrapper"], [class: "col s12"]],
-      [:logo, class: "brand-logo"]
+      [:logo, class: "brand-logo"],
       [:ul, [
         [:a, "list 1", [href: "#1"]],
         [:a, "list 2", [href: "#2"]]
@@ -109,7 +109,7 @@ defmodule Materialize.Components.Navbar do
   ```Elixie
   #{__MODULE__}.get_html([
       [:wrap, [class: "nav-wrapper"], [class: "col s12"]],
-      [:logo, class: "brand-logo"]
+      [:logo, class: "brand-logo"],
       [:ul, [
         [:a, "list 1", [href: "#1"]],
         [:a, "list 2", [href: "#2"]]
@@ -122,7 +122,7 @@ defmodule Materialize.Components.Navbar do
     {opts, wrap} = get_element(opts, :wrap)
     {opts, logo} = get_element(opts, :logo)
     wrap = prepare_wrapper(wrap)
-    logo = content_logo([:a] ++ logo)
+    logo = content_logo(logo)
 
     list = for item <- opts do
       if (Enum.member?(item, :ul)) do
@@ -173,7 +173,7 @@ defmodule Materialize.Components.Navbar do
 
   # get link
   defp content_logo(logo) do
-    {tag, content, attr} = parse_item(logo, @logo_name, @logo_options)
+    {tag, content, attr} = parse_item([:a] ++ [logo], @logo_name, @logo_options)
     content_tag(tag, content, attr)
   end
 
@@ -197,21 +197,21 @@ defmodule Materialize.Components.Navbar do
       false -> raise(ArgumentError, error)
     end
 
-    {item -- [tag], tag}
+    {List.flatten(item -- [tag]), tag}
   end
 
   # teg text or default text
   defp get_content(item, default_text \\ "") do
     error = "Element #{inspect(item)} has not content"
 
-    content = with {:ok, content} <- Enum.fetch(item, 0) do
+    content = with {:ok, content} <- Enum.fetch(item, 0), true <- is_binary(content) do
         content
     else
       :error -> default_text
-      false -> raise(ArgumentError, error)
+      false -> default_text # raise(ArgumentError, error)
     end
 
-    {item -- [content], content}
+    {List.flatten(item -- [content]), content}
   end
 
   # get attribute from [class: "example"] or {:class, "example"}
