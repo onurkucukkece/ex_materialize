@@ -186,6 +186,11 @@ defmodule Materialize.Components.Navbar do
     {opts -- [element], element -- [member]}
   end
 
+  # defp content_logo(logo) when length(logo) == 0 do
+  #   [:a, @logo_name, @logo_options]
+  #   |> content_logo()
+  # end
+
   # get link
   defp content_logo(logo) do
     {tag, content, attr} = parse_item([:a] ++ logo, @logo_name, @logo_options)
@@ -218,6 +223,7 @@ defmodule Materialize.Components.Navbar do
   # teg text or default text
   defp get_content(item, default_text \\ "") do
     error = "Element #{inspect(item)} has not content"
+    IO.inspect item
 
     case Enum.fetch(item, 0) do
       {:ok, content} -> 
@@ -226,12 +232,13 @@ defmodule Materialize.Components.Navbar do
         case content do
           content when is_binary(content) -> content 
           content when is_list(content) -> get_item(nil, content, nil)
+          content when is_tuple(content) -> {[], default_text}
           _ -> raise(ArgumentError, error)
         end
 
         {item, content}
       :error -> {item, default_text}
-      _ -> raise(ArgumentError, error)
+      _ -> {item, default_text}
     end
   end
 

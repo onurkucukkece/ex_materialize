@@ -150,7 +150,7 @@ defmodule NavbarTest do
 
   test "when set options without wrapper and logo with custom class" do
     opts = [
-      [:logo, "Custom Logo", class: "custom-logo-class"],
+      [:logo, class: "custom-logo-class"],
       [:ul, [
         [:a, "list 1", [href: "#1"]],
         [:a, "list 2", [href: "#2"]]
@@ -159,7 +159,7 @@ defmodule NavbarTest do
 
     assert safe_to_string(get_html(opts)) == ~s(<nav>) <>
       ~s(<div class="nav-wrapper">) <>
-      ~s(<a class="custom-logo-class" href="#">Custom Logo</a>) <>
+      ~s(<a class="custom-logo-class" href="#">Logo</a>) <>
       ~s(<ul class="right hide-on-med-and-down" id="nav-mobile">) <>
       ~s(<li><a href="#1">list 1</a></li>) <>
       ~s(<li><a href="#2">list 2</a></li>) <>
