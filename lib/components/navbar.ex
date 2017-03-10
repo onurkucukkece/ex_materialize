@@ -131,8 +131,8 @@ defmodule Materialize.Components.Navbar do
   def get_html(opts) do
     {opts, wrap} = get_element(opts, :wrap)
     {opts, logo} = get_element(opts, :logo)
-    wrap = prepare_wrapper(wrap)
-    logo = content_logo(logo)
+    wrap = get_wrapper(wrap)
+    logo = get_logo(logo)
 
     list = for item <- opts do
       if (Enum.member?(item, :ul)) do
@@ -144,12 +144,25 @@ defmodule Materialize.Components.Navbar do
 
     # result navbar block
     content_tag(:nav) do
-      content = [logo] ++ list
-      do_wrap(wrap, content)
+      do_wrap(wrap, [safe: [elem(logo, 1), list[:safe]]])
     end
   end
 
-  # apply all wrappers
+  defp get_element(opts, member) do
+    element = Enum.find(opts, [], fn(x) -> Enum.member?(x, member) end)
+    {opts -- [element], element -- [member]}
+  end
+
+  defp get_wrapper(wrap) when length(wrap) == 0 do
+    [Keyword.merge(@wrap_options, wrap)]
+    |> get_wrapper()
+  end
+
+  defp get_wrapper(wrap) when is_list(wrap) do
+    first = Keyword.merge(@wrap_options, List.first(wrap))
+    List.replace_at(wrap, 0, first)
+  end
+
   defp do_wrap(wrap, content) do
     wrapper = List.last(wrap)
     wrap = wrap -- [wrapper]
@@ -160,117 +173,54 @@ defmodule Materialize.Components.Navbar do
     else
       content_tag(:div, content, wrapper)
     end
-  end 
-
-  defp prepare_wrapper(wrap) when length(wrap) == 0 do
-    [Keyword.merge(@wrap_options, wrap)]
-    |> prepare_wrapper()
   end
 
-  # prepare wrappers
-  defp prepare_wrapper(wrap) when is_list(wrap) do
-    for item <- wrap do
-      attr = get_attr(item)
-
-      if (List.first(wrap) === item) do
-        Keyword.merge(@wrap_options, attr)
-      else 
-        attr
-      end
-    end
+  defp get_logo(logo) do
+		name = Enum.find(logo, @logo_name, &is_binary/1)
+		content_tag(:a, name, get_attr(logo -- [name], @logo_options))
   end
 
-  # get element: wrap or logo
-  defp get_element(opts, member) do
-    element = Enum.find(opts, [], fn(x) -> Enum.member?(x, member) end)
-    {opts -- [element], element -- [member]}
+  defp get_attr(opts, default_attr) when length(opts) > 0 do
+    Keyword.merge(default_attr, List.flatten(opts))
   end
 
-  # defp content_logo(logo) when length(logo) == 0 do
-  #   [:a, @logo_name, @logo_options]
-  #   |> content_logo()
-  # end
+  defp get_attr(opts, default_attr) when opts == [], do: default_attr
 
-  # get link
-  defp content_logo(logo) do
-    {tag, content, attr} = parse_item([:a] ++ logo, @logo_name, @logo_options)
-    content_tag(tag, content, attr)
-  end
-
-  # parse element and get tag, text and attribute
   defp parse_item(opts, default_text \\ "", default_attr \\ []) do
-    {opts, tag} = get_tag(opts)
-    {opts, content} = get_content(opts, default_text)
-    attr = get_attr(opts, default_attr)
-
-    {tag, content, attr}
+    tag = get_tag(opts)
+    content_ = opts -- [tag] |> List.first()
+    content =  get_content(content_, default_text)
+    {tag, content, get_attr(opts -- [tag, content_], default_attr)}
   end
 
-  # get tag
-  defp get_tag(item) do
-    error = "Element #{inspect(item)} has not tag"
-
-    tag = with {:ok, tag} <- Enum.fetch(item, 0), true <- is_atom(tag) do
-        tag
-    else
-      :error -> raise(ArgumentError, error)
-      false -> raise(ArgumentError, error)
-    end
-
-    {item -- [tag], tag}
+  defp get_tag(opts) when is_list(opts) do
+    List.first(opts)
+    |> get_tag()
   end
 
-  # teg text or default text
-  defp get_content(item, default_text \\ "") do
-    error = "Element #{inspect(item)} has not content"
-    IO.inspect item
+  defp get_tag(opts) when is_atom(opts), do: opts
+  defp get_tag(_), do: raise(ArgumentError, "The tag must be at first element!")
 
-    case Enum.fetch(item, 0) do
-      {:ok, content} -> 
-        item = item -- [content]
-
-        case content do
-          content when is_binary(content) -> content 
-          content when is_list(content) -> get_item(nil, content, nil)
-          content when is_tuple(content) -> {[], default_text}
-          _ -> raise(ArgumentError, error)
-        end
-
-        {item, content}
-      :error -> {item, default_text}
-      _ -> {item, default_text}
-    end
+  defp get_content(opts, _) when is_list(opts) do
+		get_item(nil, opts, nil)
   end
 
-  # get attribute from [class: "example"] or {:class, "example"}
-  defp get_attr(item, default_attr \\ []) do
-    # error = "Error get attributes in element #{inspect(item)}"
+  defp get_content(opts, _) when is_binary(opts), do: opts
+	defp get_content(opts, default_text) when is_nil(opts), do: default_text
+	defp get_content(_, default_text), do: default_text
 
-    # if attributes set as keyword
-    attr = with {:ok, attr} <- Enum.fetch(item, 0) do
-        if (is_list(attr)) do
-          attr
-        else 
-          for el <- item, is_tuple(el), do: el
-        end
-    # if attributes set as tuples
-    else
-      :error -> []
-    end
-
-    Keyword.merge(default_attr, attr)
-  end
-
-  # get one element, example <a>
   defp get_item(tag, content, attr) when is_binary(content) do
     content_tag(tag, content, attr)
   end
 
-  # get list, example <ul>
   defp get_item(_, list, _) when is_list(list) do
     for item <- list do
-      {tag, content, attr} = parse_item(item)
-      content_tag(:li, get_item(tag, content, attr))
+      if is_list(item) do
+        {tag, content, attr} = parse_item(item)
+        content_tag(:li, get_item(tag, content, attr))
+      else
+        item
+      end
     end
   end
 end

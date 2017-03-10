@@ -67,7 +67,7 @@ defmodule NavbarTest do
   test "when set full options, attributes set as tuples, except wrapper" do
     opts = [
       [:wrap, [class: "nav-wrapper"], [class: "col s12"]],
-      [:logo, "Custom Logo", class: "brand-logo"],
+      [:logo, "Custom Logo", class: "brand-logo", href: "#custom"],
       [:ul, [
         [:a, "list 1", href: "#1"],
         [:a, "list 2", href: "#2"]
@@ -77,7 +77,7 @@ defmodule NavbarTest do
     assert safe_to_string(get_html(opts)) == ~s(<nav>) <>
       ~s(<div class="nav-wrapper">) <>
       ~s(<div class="col s12">) <>
-      ~s(<a class="brand-logo" href="#">Custom Logo</a>) <>
+      ~s(<a class="brand-logo" href="#custom">Custom Logo</a>) <>
       ~s(<ul class="right hide-on-med-and-down" id="nav-mobile">) <>
       ~s(<li><a href="#1">list 1</a></li>) <>
       ~s(<li><a href="#2">list 2</a></li>) <>
@@ -150,7 +150,7 @@ defmodule NavbarTest do
 
   test "when set options without wrapper and logo with custom class" do
     opts = [
-      [:logo, class: "custom-logo-class"],
+      [:logo, class: "custom"],
       [:ul, [
         [:a, "list 1", [href: "#1"]],
         [:a, "list 2", [href: "#2"]]
@@ -159,7 +159,28 @@ defmodule NavbarTest do
 
     assert safe_to_string(get_html(opts)) == ~s(<nav>) <>
       ~s(<div class="nav-wrapper">) <>
-      ~s(<a class="custom-logo-class" href="#">Logo</a>) <>
+      ~s(<a class="custom" href="#">Logo</a>) <>
+      ~s(<ul class="right hide-on-med-and-down" id="nav-mobile">) <>
+      ~s(<li><a href="#1">list 1</a></li>) <>
+      ~s(<li><a href="#2">list 2</a></li>) <>
+      ~s(</ul>) <>
+      ~s(</div>) <>
+      ~s(</nav>)
+  end
+
+  test "when set options wrapper with custom class and logo with custom href" do
+    opts = [
+      [:wrap, [class: "custom", id: "nav-wrapper"]],
+      [:logo, href: "#custom"],
+      [:ul, [
+        [:a, "list 1", [href: "#1"]],
+        [:a, "list 2", [href: "#2"]]
+      ]]
+    ]
+
+    assert safe_to_string(get_html(opts)) == ~s(<nav>) <>
+      ~s(<div class="custom" id="nav-wrapper">) <>
+      ~s(<a class="brand-logo" href="#custom">Logo</a>) <>
       ~s(<ul class="right hide-on-med-and-down" id="nav-mobile">) <>
       ~s(<li><a href="#1">list 1</a></li>) <>
       ~s(<li><a href="#2">list 2</a></li>) <>
