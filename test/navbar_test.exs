@@ -172,4 +172,49 @@ defmodule NavbarTest do
       ~s(</div>) <>
       ~s(</nav>)
   end
+
+  test "when set minimum options, attributes set as tuples, set option mobile_collapse is true" do
+      opts = [
+        [:options, mobile_collapse: true],
+        [:ul, [
+          [:a, "list 1", href: "#1"],
+          [:a, "list 2", href: "#2"]
+        ]]
+      ]
+
+      assert safe_to_string(get_html(opts)) == ~s(<nav>) <>
+        ~s(<div class="nav-wrapper">) <>
+        ~s(<a class="brand-logo" href="#">Logo</a>) <>
+        ~s(<a class="button-collapse" data-activates="mobile-demo" href="#"><i class="material-icons">menu</i></a>) <>
+        ~s(<ul class="right hide-on-med-and-down" id="nav-mobile">) <>
+        ~s(<li><a href="#1">list 1</a></li>) <>
+        ~s(<li><a href="#2">list 2</a></li>) <>
+        ~s(</ul>) <>
+        ~s(<ul class="side-nav" id="mobile-demo">) <>
+        ~s(<li><a href="#1">list 1</a></li>) <>
+        ~s(<li><a href="#2">list 2</a></li>) <>
+        ~s(</ul>) <>
+        ~s(</div>) <>
+        ~s(</nav>)
+    end
+
+  test "when set minimum options, attributes set as tuples, set option mobile_collapse is false" do
+      opts = [
+        [:options, mobile_collapse: false],
+        [:ul, [
+          [:a, "list 1", href: "#1"],
+          [:a, "list 2", href: "#2"]
+        ]]
+      ]
+
+      assert safe_to_string(get_html(opts)) == ~s(<nav>) <>
+        ~s(<div class="nav-wrapper">) <>
+        ~s(<a class="brand-logo" href="#">Logo</a>) <>
+        ~s(<ul class="right hide-on-med-and-down" id="nav-mobile">) <>
+        ~s(<li><a href="#1">list 1</a></li>) <>
+        ~s(<li><a href="#2">list 2</a></li>) <>
+        ~s(</ul>) <>
+        ~s(</div>) <>
+        ~s(</nav>)
+    end
 end

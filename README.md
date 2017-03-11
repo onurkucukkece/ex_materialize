@@ -9,7 +9,7 @@ by adding `materialize` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
-  [{:materialize, "~> 0.1.1"}]
+  [{:materialize, "~> 0.1.2"}]
 end
 ```
 
@@ -23,6 +23,13 @@ And run mix task:
 
 ```shell
 $ mix materialize.install
+```
+
+Change the file **brunch-config.js** following the instructions into this file.
+And run brunch build:
+
+```shell
+node_modules/brunch/bin/brunch build
 ```
 
 ### Result

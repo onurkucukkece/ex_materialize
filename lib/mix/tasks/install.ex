@@ -2,7 +2,16 @@ defmodule Mix.Tasks.Materialize.Install do
 	@moduledoc """
 	Install materialize package
 
-				mix materialize.install
+	```shell
+  $ mix materialize.install
+  ```
+
+	Change the file **brunch-config.js** following the instructions into this file.
+	And run brunch build:
+
+	```shell
+  node_modules/brunch/bin/brunch build
+  ```
 
 	"""
 
@@ -48,6 +57,10 @@ defmodule Mix.Tasks.Materialize.Install do
 		case File.read "brunch-config.js" do
       {:ok, file} ->
         File.write! "brunch-config.js", file <> brunch_instructions()
+        IO.puts """
+				Change brunch-config.js and run: \n
+				node_modules/brunch/bin/brunch build
+				"""
       error ->
         Mix.raise """
         Could not open brunch-config.js file. #{inspect error}
@@ -124,4 +137,10 @@ defmodule Mix.Tasks.Materialize.Install do
 			"""
 		end
 	end
+
+#	defp raise_arg(arg) do
+#    Mix.raise """
+#    Invalid option --#{arg}
+#    """
+#  end
 end
