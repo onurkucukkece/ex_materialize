@@ -195,16 +195,11 @@ defmodule Materialize.Components.Navbar do
 	# region - prepare items
   defp parse_item(opts, default_text \\ "", default_attr \\ []) do
     tag = get_tag(opts)
-    content_ = opts -- [tag] |> List.first()
-    content =  get_content(content_, default_text)
-    {tag, content, get_attr(opts -- [tag, content_], default_attr)}
+    [content|opts] = opts -- [tag]
+    {tag, get_content(content, default_text), get_attr(opts, default_attr)}
   end
 
-  defp get_tag(opts) when is_list(opts) do
-    List.first(opts)
-    |> get_tag()
-  end
-
+  defp get_tag(opts) when is_list(opts), do: List.first(opts) |> get_tag()
   defp get_tag(opts) when is_atom(opts), do: opts
   defp get_tag(opts), do: raise(ArgumentError, "The tag must be at first element! #{inspect(opts)}")
 

@@ -17,8 +17,7 @@ defmodule Mix.Tasks.Materialize.Install do
 	end
 
 	defp do_run do
-		npm_install()
-		|> do_assets
+		npm_install() |> do_assets()
 
 		do_brunch()
 	end
@@ -28,7 +27,7 @@ defmodule Mix.Tasks.Materialize.Install do
 		
 		npm_dist_path = Path.join(~w(node_modules materialize-css dist))
 		
-		chek_path(npm_dist_path, "\nTray run npm install materialize-css --save-dev")
+		chek_path(npm_dist_path, "\nTray run: npm install materialize-css --save-dev")
 
     npm_dist_path
 	end

@@ -6,22 +6,6 @@ defmodule NavbarTest do
 
   doctest Materialize.Components.Navbar
 
-  # test "check get html" do
-  #   [
-  #     [:wrap, [class: "nav-wrapper"], [class: "col s12"]],
-  #     [:logo, "Custom Logo", [class: "qwerty"]],
-  #     [:ul, [
-  #       [:a, "list 1", [href: "#1"]],
-  #       [:a, "list 2", [href: "#2"]]
-  #     ]]
-  #   ]
-  #   |> get_html()
-  #   |> safe_to_string()
-  #   |> IO.inspect()
-  # end
-
-  # TODO write test
-
   test "when set full options, attributes set as keywords" do
     opts = [
       [:wrap, [class: "nav-wrapper"], [class: "col s12"]],
