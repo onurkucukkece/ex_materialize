@@ -1,7 +1,7 @@
 defmodule Materialize.Mixfile do
   use Mix.Project
 
-  @version "0.1.4-dev"
+  @version "0.1.4"
 
   def project do
     [app: :materialize,
@@ -53,5 +53,9 @@ defmodule Materialize.Mixfile do
      maintainers: ["Mistim", "Mikhail Oslovskiy"],
      licenses: ["MIT"],
      links: %{"GitHub" => "https://github.com/mistim/ex_materialize"}]
+  end
+
+  def get_version do
+    @version
   end
 end

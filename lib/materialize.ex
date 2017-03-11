@@ -9,7 +9,7 @@ defmodule Materialize do
 
   ```elixir
   def deps do
-    [{:materialize, "~> 0.1.1"}]
+    [{:materialize, "~> #{Materialize.Mixfile.get_version}"}]
   end
   ```
 
