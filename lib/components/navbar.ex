@@ -148,11 +148,20 @@ defmodule Materialize.Components.Navbar do
     end
   end
 
+	# region - common
   defp get_element(opts, member) do
     element = Enum.find(opts, [], fn(x) -> Enum.member?(x, member) end)
     {opts -- [element], element -- [member]}
   end
 
+  defp get_attr(opts, default_attr) when length(opts) > 0 do
+    Keyword.merge(default_attr, List.flatten(opts))
+  end
+
+  defp get_attr(opts, default_attr) when opts == [], do: default_attr
+	# endregion
+
+	# region - prepare wrappwer
   defp get_wrapper(wrap) when length(wrap) == 0 do
     [Keyword.merge(@wrap_options, wrap)]
     |> get_wrapper()
@@ -174,18 +183,16 @@ defmodule Materialize.Components.Navbar do
       content_tag(:div, content, wrapper)
     end
   end
+  # endregion
 
+	# region - prepare logo
   defp get_logo(logo) do
 		name = Enum.find(logo, @logo_name, &is_binary/1)
 		content_tag(:a, name, get_attr(logo -- [name], @logo_options))
   end
+  # endregion
 
-  defp get_attr(opts, default_attr) when length(opts) > 0 do
-    Keyword.merge(default_attr, List.flatten(opts))
-  end
-
-  defp get_attr(opts, default_attr) when opts == [], do: default_attr
-
+	# region - prepare items
   defp parse_item(opts, default_text \\ "", default_attr \\ []) do
     tag = get_tag(opts)
     content_ = opts -- [tag] |> List.first()
@@ -199,19 +206,14 @@ defmodule Materialize.Components.Navbar do
   end
 
   defp get_tag(opts) when is_atom(opts), do: opts
-  defp get_tag(_), do: raise(ArgumentError, "The tag must be at first element!")
+  defp get_tag(opts), do: raise(ArgumentError, "The tag must be at first element! #{inspect(opts)}")
 
-  defp get_content(opts, _) when is_list(opts) do
-		get_item(nil, opts, nil)
-  end
-
+  defp get_content(opts, _) when is_list(opts), do: get_item(nil, opts, nil)
   defp get_content(opts, _) when is_binary(opts), do: opts
 	defp get_content(opts, default_text) when is_nil(opts), do: default_text
 	defp get_content(_, default_text), do: default_text
 
-  defp get_item(tag, content, attr) when is_binary(content) do
-    content_tag(tag, content, attr)
-  end
+  defp get_item(tag, content, attr) when is_binary(content), do: content_tag(tag, content, attr)
 
   defp get_item(_, list, _) when is_list(list) do
     for item <- list do
@@ -223,4 +225,5 @@ defmodule Materialize.Components.Navbar do
       end
     end
   end
+  # endregion
 end
