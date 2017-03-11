@@ -52,7 +52,7 @@ defmodule Mix.Tasks.Materialize.Install do
 		copy_dir_r(npm_dist_path, web_vendor_path, "css")
 		copy_dir_r(npm_dist_path, web_vendor_path, "js")
 		copy_dir_r(npm_dist_path, web_assets_path, "fonts")
-		copy_dir_r(deps_vendor_path, web_vendor_path, "js")
+		copy_dir_r(deps_vendor_path, web_assets_path, "js")
 	end
 
 	defp do_brunch do
@@ -72,6 +72,7 @@ defmodule Mix.Tasks.Materialize.Install do
 
 	def brunch_instructions do
     """
+
     // To add the materialize generated assets to your brunch build, do the following:
     //
     // Replace
@@ -85,7 +86,6 @@ defmodule Mix.Tasks.Materialize.Install do
     //     javascripts: {
     //       joinTo: {
     //         "js/app.js": /^(web\\/static\\/js)|(node_modules)/,
-    //				 "js/materialize.js": ["web/static/vendor/materialize/js/materialize-app.js"],
     //				 "js/materialize.js": ["web/static/vendor/materialize/js/materialize.js"],
     //         "js/materialize.min.js": ["web/static/vendor/materialize/js/materialize.min.js"],
     //       }
