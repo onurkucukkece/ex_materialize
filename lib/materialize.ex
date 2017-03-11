@@ -29,7 +29,7 @@ defmodule Materialize do
  	And run brunch build:
 
   ```shell
-  node_modules/brunch/bin/brunch build
+  node node_modules/brunch/bin/brunch build
   ```
 
   ### Result

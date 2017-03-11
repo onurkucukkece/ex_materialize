@@ -29,7 +29,7 @@ Change the file **brunch-config.js** following the instructions into this file.
 And run brunch build:
 
 ```shell
-node_modules/brunch/bin/brunch build
+node node_modules/brunch/bin/brunch build
 ```
 
 ### Result

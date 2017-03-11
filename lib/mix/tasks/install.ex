@@ -10,7 +10,7 @@ defmodule Mix.Tasks.Materialize.Install do
 	And run brunch build:
 
 	```shell
-  node_modules/brunch/bin/brunch build
+  node node_modules/brunch/bin/brunch build
   ```
 
 	"""
@@ -44,6 +44,7 @@ defmodule Mix.Tasks.Materialize.Install do
 	defp do_assets(npm_dist_path) do
 		web_assets_path = Path.join(~w(web static assets))
 		web_vendor_path = Path.join(~w(web static vendor materialize))
+		deps_vendor_path = Path.join(~w(deps materialize web static))
 
 		File.mkdir_p web_assets_path
 		File.mkdir_p web_vendor_path
@@ -51,6 +52,7 @@ defmodule Mix.Tasks.Materialize.Install do
 		copy_dir_r(npm_dist_path, web_vendor_path, "css")
 		copy_dir_r(npm_dist_path, web_vendor_path, "js")
 		copy_dir_r(npm_dist_path, web_assets_path, "fonts")
+		copy_dir_r(deps_vendor_path, web_vendor_path, "js")
 	end
 
 	defp do_brunch do
@@ -83,6 +85,7 @@ defmodule Mix.Tasks.Materialize.Install do
     //     javascripts: {
     //       joinTo: {
     //         "js/app.js": /^(web\\/static\\/js)|(node_modules)/,
+    //				 "js/materialize.js": ["web/static/vendor/materialize/js/materialize-app.js"],
     //				 "js/materialize.js": ["web/static/vendor/materialize/js/materialize.js"],
     //         "js/materialize.min.js": ["web/static/vendor/materialize/js/materialize.min.js"],
     //       }
