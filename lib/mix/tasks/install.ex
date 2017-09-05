@@ -33,9 +33,9 @@ defmodule Mix.Tasks.Materialize.Install do
 
 	defp npm_install do
 		System.cmd "npm", ["install", "materialize-css", "--save-dev"], into: IO.stream(:stdio, :line)
-		
+
 		npm_dist_path = Path.join(~w(node_modules materialize-css dist))
-		
+
 		chek_path(npm_dist_path, "\nTray run: npm install materialize-css --save-dev")
 
     npm_dist_path
@@ -119,7 +119,7 @@ defmodule Mix.Tasks.Materialize.Install do
 
 	defp copy_dir_r(source_path, dist_path, dir) do
 		res_dist_path = Path.join([dist_path, dir])
-		
+
 		File.cp_r(Path.join([source_path, dir]), res_dist_path)
 
 		chek_path res_dist_path

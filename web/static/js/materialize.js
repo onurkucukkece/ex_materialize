@@ -1,5 +1,5 @@
 export var Materialize = {
-    navbar: function run() {
+    navbar: function () {
         $(".button-collapse").sideNav()
     }
 };
