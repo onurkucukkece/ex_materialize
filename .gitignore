@@ -21,3 +21,4 @@ erl_crash.dump
 
 # IDE files
 .idea
+*.iml
