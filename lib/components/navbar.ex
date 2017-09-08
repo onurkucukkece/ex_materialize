@@ -102,7 +102,7 @@ defmodule Materialize.Components.Navbar do
   #### Mobile collapse button
 
 	Default option **mobile_collapse** is false.
-  Set еру options as follows:
+  Set еnу options as follows:
 
   ```Elixir
   [

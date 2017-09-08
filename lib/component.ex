@@ -30,7 +30,7 @@ defmodule Materialize.Component do
 
   alias Materialize.Components.Navbar
 
-  @doc false
+  @doc ""
   defmacro __using__(_) do
     quote do
       import Materialize.Components.Navbar
@@ -38,51 +38,51 @@ defmodule Materialize.Component do
     end
   end
 
-  def bage do
+#  def bage do
+#
+#  end
 
-  end
+#  def button do
+#
+#  end
 
-  def button do
+#  def breadcrumbs do
+#
+#  end
 
-  end
+#  def card do
+#
+#  end
 
-  def breadcrumbs do
+#  def chip do
+#
+#  end
 
-  end
+#  def collection do
+#
+#  end
 
-  def card do
+#  def footer do
+#
+#  end
 
-  end
+#  def form do
+#
+#  end
 
-  def chip do
+#  def icon do
+#
+#  end
 
-  end
-
-  def collection do
-
-  end
-
-  def footer do
-
-  end
-
-  def form do
-
-  end
-
-  def icon do
-
-  end
-
-  def navbar(config) do
+  def get_navbar(config) do
     Navbar.get_html(config)
   end
 
-  def pagimation do
+#  def pagimation do
+#
+#  end
 
-  end
-
-  def preloader do
-
-  end
+#  def preloader do
+#
+#  end
 end
