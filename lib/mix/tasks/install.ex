@@ -31,7 +31,7 @@ defmodule Mix.Tasks.Materialize.Install do
 	end
 
 	defp npm_install do
-		System.cmd "cd", [Path.absname("assets")]
+		System.cmd "cd", [Path.absname("assets")], into: IO.stream(:stdio, :line)
 		System.cmd "npm", ["install", "materialize-css", "--save-dev"], into: IO.stream(:stdio, :line)
 		Path.join(~w(node_modules materialize-css dist))
 	end
