@@ -2,7 +2,7 @@ defmodule Materialize.Component do
   @moduledoc """
   Use materialize-css components
 
-  ### [Navbar](https://hexdocs.pm/materialize/0.1.4-dev/Materialize.Components.Navbar.html#content)
+  ### [Navbar](https://hexdocs.pm/materialize/#{Materialize.Mixfile.get_version}/Materialize.Components.Navbar.html#content)
 
   Add alias in **/web/views/layout_view.ex** with configuration navbar:
 

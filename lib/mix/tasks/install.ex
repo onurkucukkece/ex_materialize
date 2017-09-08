@@ -28,52 +28,40 @@ defmodule Mix.Tasks.Materialize.Install do
 	defp do_run do
 		npm_install() |> do_assets()
 		#do_brunch()
+    finish()
 	end
 
 	defp npm_install do
-		System.cmd "cd", [Path.absname("assets")], into: IO.stream(:stdio, :line)
-		System.cmd "npm", ["install", "materialize-css", "--save-dev"], into: IO.stream(:stdio, :line)
+		cmd("cd #{Path.absname("assets")} && npm install materialize-css --save-dev")
+		cmd("cd ../")
 		Path.join(~w(node_modules materialize-css dist))
 	end
 
 	defp do_assets(npm_dist_path) do
     chek_path(npm_dist_path, "\nTray run: npm install materialize-css --save-dev")
 
-		web_assets_path = Path.join(~w(assets))
     web_vendor_path = Path.join(~w(assets vendor materialize))
-    web_static_path = Path.join(~w(assets static))
+    priv_static_path = Path.join(~w(priv static))
 
     File.mkdir_p web_vendor_path
 
     copy_dir_r(npm_dist_path, web_vendor_path, "css")
     copy_dir_r(npm_dist_path, web_vendor_path, "js")
-    #copy_dir_r(npm_dist_path, web_assets_path, "fonts")
-    copy_dir_r(npm_dist_path, web_vendor_path, "fonts")
+    copy_dir_r(npm_dist_path, priv_static_path, "fonts")
 	end
 
   defp finish do
-    IO.puts "The materialize-css installed successful!"
+    Mix.shell.info [:green, "* The materialize-css installed successful! "]
   end
 
-	defp do_brunch do
-		case File.read "brunch-config.js" do
-      {:ok, file} ->
-        File.write! "brunch-config.js", file <> brunch_instructions()
-        IO.puts """
-				Change brunch-config.js and run: \n
-				node_modules/brunch/bin/brunch build
-				"""
-      error ->
-        Mix.raise """
-        Could not open brunch-config.js file. #{inspect error}
-        """
+  defp cmd(cmd) do
+    Mix.shell.info [:green, "* running ", :reset, cmd]
+    case Mix.shell.cmd(cmd, quiet: true) do
+      0 ->
+        []
+      _ ->
+        ["$ #{cmd}"]
     end
-	end
-
-	defp brunch_instructions do
-    """
-
-    """
   end
 
 	defp copy_dir_r(source_path, dist_path, dir) do
@@ -99,9 +87,4 @@ defmodule Mix.Tasks.Materialize.Install do
 		end
 	end
 
-#	defp raise_arg(arg) do
-#    Mix.raise """
-#    Invalid option --#{arg}
-#    """
-#  end
 end
