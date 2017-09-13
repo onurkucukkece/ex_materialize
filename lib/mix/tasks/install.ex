@@ -34,7 +34,7 @@ defmodule Mix.Tasks.Materialize.Install do
 	defp npm_install do
 		cmd("cd #{Path.absname("assets")} && npm install materialize-css --save-dev")
 		cmd("cd ../")
-		Path.join(~w(node_modules materialize-css dist))
+		Path.join(~w(assets node_modules materialize-css dist))
 	end
 
 	defp do_assets(npm_dist_path) do
@@ -51,7 +51,7 @@ defmodule Mix.Tasks.Materialize.Install do
 	end
 
   defp finish do
-    Mix.shell.info [:green, "* The materialize-css installed successful! "]
+    Mix.shell.info [:green, "* The materialize-css installed successful!"]
   end
 
   defp cmd(cmd) do
