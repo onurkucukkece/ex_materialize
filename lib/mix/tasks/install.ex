@@ -32,10 +32,12 @@ defmodule Mix.Tasks.Materialize.Install do
 
 	use Mix.Task
 
+  @access_phx_version "1.3.0"
+
 	@doc "start task"
 	def run(_) do
 		IO.puts "Install materialize-css"
-    check_version(:phoenix, "1.3.0")
+    check_version(:phoenix, @access_phx_version)
 		do_run()
 	end
 
