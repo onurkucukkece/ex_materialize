@@ -74,7 +74,7 @@ defmodule Materialize.Html do
   """
   @spec get_a(String.t, String.t, Keyword.t) :: List.t
   def get_a(text, href, attr \\ []) do
-    ~s(<#a href="#{}"#{render_attribute(attr)}>#{text}</#a>)
+    ~s(<#a href="#{href}"#{render_attribute(attr)}>#{text}</#a>)
   end
 
   @doc """

@@ -7,6 +7,7 @@ defmodule Materialize.Mixfile do
     [app: :materialize,
      version: @version,
      elixir: "~> 1.4",
+     phoenix: "1.4",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
      deps: deps(),
