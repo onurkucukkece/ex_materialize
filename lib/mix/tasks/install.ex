@@ -87,7 +87,7 @@ defmodule Mix.Tasks.Materialize.Install do
 
   defp check_version(module, version) do
     dep_version = get_project_dep(module)
-    IO.inspect(Version.match?(version, dep_version))
+
     unless Version.match?(version, dep_version) do
       Mix.raise """
       Dependency "#{module}" must have version #{version} but its version #{dep_version}
