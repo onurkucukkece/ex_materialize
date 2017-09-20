@@ -149,17 +149,13 @@ defmodule Materialize.Components.Navbar do
   @mobile_menu_attr [class: "side-nav", id: "mobile-collapse"]
 
   @doc """
-  Create tag **span** or etc.
-  
-  ### Parameters
-
-    - options: keyword list
+  Create block **navbar**
 
   ### Example
 
   ```Elixie
   #{__MODULE__}.get_html([
-      [:wrap, [class: "nav-wrapper"], [class: "col s12"]],
+      [:wrap, [class: "nav-wrapper"]],
       [:logo, class: "brand-logo"],
       [:ul, [
         [:a, "list 1", [href: "#1"]],
