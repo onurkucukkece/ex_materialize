@@ -11,7 +11,8 @@ defmodule Materialize.Components.Navbar do
 
   def navbar(conn) do
     get_html([
-      [:wrap, [class: "nav-wrapper"], [class: "col s12"]],
+      [:nav, class: "green lighten-2", role: "navigation"], # if need set class for nav
+      [:wrap, [class: "nav-wrapper"]],
       [:logo, class: "brand-logo"],
       [:ul, [
         [:a, "list 1", [href: "#1"]],
@@ -170,6 +171,7 @@ defmodule Materialize.Components.Navbar do
   @spec get_html(Keyword.t) :: {:safe, [String.t]}
   def get_html(opts) do
     {opts, options} = get_element(opts, :options)
+    {opts, nav} = get_element(opts, :nav)
     {opts, wrap} = get_element(opts, :wrap)
     {opts, logo} = get_element(opts, :logo)
     options = Keyword.merge(@options, options)
@@ -187,7 +189,7 @@ defmodule Materialize.Components.Navbar do
     end
 
     # result navbar block
-    content_tag(:nav) do
+    content_tag(:nav, nav) do
       do_wrap(wrap, [safe: [logo[:safe], mobile_icon[:safe], list[:safe]]])
     end
   end

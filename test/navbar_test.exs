@@ -217,4 +217,25 @@ defmodule NavbarTest do
       ~s(</div>) <>
       ~s(</nav>)
   end
+
+  test "when set class for tag :nav" do
+    opts = [
+      [:options, mobile_collapse: false],
+      [:nav, class: "green lighten-2", role: "navigation"],
+      [:ul, [
+        [:a, "list 1", href: "#1"],
+        [:a, "list 2", href: "#2"]
+      ]]
+    ]
+
+    assert safe_to_string(get_html(opts)) == ~s(<nav class="green lighten-2" role="navigation">) <>
+      ~s(<div class="nav-wrapper">) <>
+      ~s(<a class="brand-logo" href="#">Logo</a>) <>
+      ~s(<ul class="right hide-on-med-and-down" id="nav-mobile">) <>
+      ~s(<li><a href="#1">list 1</a></li>) <>
+      ~s(<li><a href="#2">list 2</a></li>) <>
+      ~s(</ul>) <>
+      ~s(</div>) <>
+      ~s(</nav>)
+  end
 end
