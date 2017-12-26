@@ -68,9 +68,9 @@ defmodule Mix.Tasks.Materialize.Install do
     //
     //     javascripts: {
     //       joinTo: {
-    //         "js/app.js": /^(web\\/static\\/js)|(node_modules)/,
-    //				 "js/materialize.js": ["web/static/vendor/materialize/js/materialize.js"],
-    //         "js/materialize.min.js": ["web/static/vendor/materialize/js/materialize.min.js"],
+    //         "js/app.js": /^(js|node_modules)/,
+    //		   "js/materialize.min.js": /^(priv\/static\/js)/,
+    //         "js/materialize.min.js": /^(priv\/static\/js)/,
     //       }
     //     },
     //
@@ -87,9 +87,9 @@ defmodule Mix.Tasks.Materialize.Install do
     //
     //     stylesheets: {
     //       joinTo: {
-    //         "css/app.css": /^(web\\/static\\/css)/,
-    //  			 "css/materialize.css": ["web/static/vendor/materialize/css/materialize.css"],
-    //         "css/materialize.min.css": ["web/static/vendor/materialize/css/materialize.min.css"],
+    //         "css/app.css": /^(css)/,
+    //     	   "css/materialize.min.css": /^(priv\/static\/css)/,
+    //         "css/materialize.min.css": /^(priv\/static\/css)/,
     //       },
     //       order: {
     //         after: ["web/static/css/app.css"] // concat app.css last
