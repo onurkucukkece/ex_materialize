@@ -46,7 +46,7 @@ defmodule Mix.Tasks.Materialize.Install do
 	end
 
 	defp do_brunch do
-		case File.read "brunch-config.js" do
+		case File.read "assets/brunch-config.js" do
       {:ok, file} ->
         File.write! "brunch-config.js", file <> brunch_instructions()
       error ->
