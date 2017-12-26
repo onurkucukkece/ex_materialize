@@ -37,7 +37,6 @@ defmodule Mix.Tasks.Materialize.Install do
 		web_assets_path = Path.join(~w(priv static))
 
 		File.mkdir_p web_assets_path
-		File.mkdir_p web_vendor_path
 
 		copy_dir_r(npm_dist_path, web_assets_path, "css")
 		copy_dir_r(npm_dist_path, web_assets_path, "js")
