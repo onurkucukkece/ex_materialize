@@ -47,10 +47,9 @@ After install you have next structure:
 		            |--materialize.js
 		            |--materialize.min.js
 		...
-		|--web
-		    |--static
-		        |--assets
-		            |--fonts
+		
+        |--assets
+            |--fonts
 		    |--vendor
 		        |--materialize
 		           |--css

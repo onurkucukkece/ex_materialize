@@ -34,9 +34,10 @@ defmodule Mix.Tasks.Materialize.Install do
 	end
 
 	defp do_assets(npm_dist_path) do
-		web_assets_path = Path.join(~w(priv static))
+		web_assets_path = Path.join(~w(assets))
+		web_vendor_path = Path.join(~w(assets vendor materialize))
 
-		File.mkdir_p web_assets_path
+		File.mkdir_p web_vendor_path
 
 		copy_dir_r(npm_dist_path, web_assets_path, "css")
 		copy_dir_r(npm_dist_path, web_assets_path, "js")
@@ -68,9 +69,9 @@ defmodule Mix.Tasks.Materialize.Install do
     //
     //     javascripts: {
     //       joinTo: {
-    //         "js/app.js": /^(js|node_modules)/,
-    //		   "js/materialize.min.js": /^(priv\/static\/js)/,
-    //         "js/materialize.min.js": /^(priv\/static\/js)/,
+    //         "js/app.js": /^(js)|(node_modules)/,
+    //		   "js/materialize.js": ["vendor/materialize/js/materialize.js"],
+    //         "js/materialize.min.js": ["vendor/materialize/js/materialize.min.js"],
     //       }
     //     },
     //
@@ -88,8 +89,8 @@ defmodule Mix.Tasks.Materialize.Install do
     //     stylesheets: {
     //       joinTo: {
     //         "css/app.css": /^(css)/,
-    //     	   "css/materialize.min.css": /^(priv\/static\/css)/,
-    //         "css/materialize.min.css": /^(priv\/static\/css)/,
+    //  	   "css/materialize.css": ["vendor/materialize/css/materialize.css"],
+    //         "css/materialize.min.css": ["vendor/materialize/css/materialize.min.css"],
     //       },
     //       order: {
     //         after: ["web/static/css/app.css"] // concat app.css last
