@@ -34,13 +34,11 @@ defmodule Mix.Tasks.Materialize.Install do
 	end
 
 	defp do_assets(npm_dist_path) do
-		web_vendor_path = Path.join(~w(assets vendor materialize))
+		web_assets_path = Path.join(~w(assets))
 
-		File.mkdir_p web_vendor_path
-
-		copy_dir_r(npm_dist_path, web_vendor_path, "css")
-		copy_dir_r(npm_dist_path, web_vendor_path, "js")
-		copy_dir_r(npm_dist_path, web_vendor_path, "fonts")
+		copy_dir_r(npm_dist_path, web_assets_path, "css")
+		copy_dir_r(npm_dist_path, web_assets_path, "js")
+		copy_dir_r(npm_dist_path, web_assets_path, "fonts")
 	end
 
 	defp do_brunch do
