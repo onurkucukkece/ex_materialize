@@ -67,6 +67,7 @@ Use **materialize-css** in you template project:
 	
 	<link rel="stylesheet" href="<%= static_path(@conn, "/css/materialize.css") %>">
 	
+	# Add it below the script tag for app.js
 	<script src="<%= static_path(@conn, "/js/materialize.js") %>"></script>
 ```
 
