@@ -24,9 +24,9 @@ defmodule Mix.Tasks.Materialize.Install do
 	end
 
 	defp npm_install do
-		System.cmd "npm", ["install", "materialize-css", "--save-dev"], into: IO.stream(:stdio, :line)
+		System.cmd "npm", ["install", "materialize-css", "--save-dev"], into: IO.stream(:stdio, :line), cd: "assets"
 		
-		npm_dist_path = Path.join(~w(node_modules materialize-css dist))
+		npm_dist_path = Path.join(~w(assets node_modules materialize-css dist))
 		
 		chek_path(npm_dist_path, "\nTray run npm install materialize-css --save-dev")
 
@@ -34,21 +34,20 @@ defmodule Mix.Tasks.Materialize.Install do
 	end
 
 	defp do_assets(npm_dist_path) do
-		web_assets_path = Path.join(~w(web static assets))
-		web_vendor_path = Path.join(~w(web static vendor materialize))
+		web_assets_path = Path.join(~w(assets))
+		web_vendor_path = Path.join(~w(assets vendor materialize))
 
-		File.mkdir_p web_assets_path
 		File.mkdir_p web_vendor_path
 
-		copy_dir_r(npm_dist_path, web_vendor_path, "css")
-		copy_dir_r(npm_dist_path, web_vendor_path, "js")
+		copy_dir_r(npm_dist_path, web_assets_path, "css")
+		copy_dir_r(npm_dist_path, web_assets_path, "js")
 		copy_dir_r(npm_dist_path, web_assets_path, "fonts")
 	end
 
 	defp do_brunch do
-		case File.read "brunch-config.js" do
+		case File.read "assets/brunch-config.js" do
       {:ok, file} ->
-        File.write! "brunch-config.js", file <> brunch_instructions()
+        File.write! "assets/brunch-config.js", file <> brunch_instructions()
       error ->
         Mix.raise """
         Could not open brunch-config.js file. #{inspect error}
@@ -70,9 +69,9 @@ defmodule Mix.Tasks.Materialize.Install do
     //
     //     javascripts: {
     //       joinTo: {
-    //         "js/app.js": /^(web\\/static\\/js)|(node_modules)/,
-    //				 "js/materialize.js": ["web/static/vendor/materialize/js/materialize.js"],
-    //         "js/materialize.min.js": ["web/static/vendor/materialize/js/materialize.min.js"],
+    //         "js/app.js": /^(js)|(node_modules)/,
+    //		   "js/materialize.js": ["vendor/materialize/js/materialize.js"],
+    //         "js/materialize.min.js": ["vendor/materialize/js/materialize.min.js"],
     //       }
     //     },
     //
@@ -89,9 +88,9 @@ defmodule Mix.Tasks.Materialize.Install do
     //
     //     stylesheets: {
     //       joinTo: {
-    //         "css/app.css": /^(web\\/static\\/css)/,
-    //  			 "css/materialize.css": ["web/static/vendor/materialize/css/materialize.css"],
-    //         "css/materialize.min.css": ["web/static/vendor/materialize/css/materialize.min.css"],
+    //         "css/app.css": /^(css)/,
+    //  	   "css/materialize.css": ["vendor/materialize/css/materialize.css"],
+    //         "css/materialize.min.css": ["vendor/materialize/css/materialize.min.css"],
     //       },
     //       order: {
     //         after: ["web/static/css/app.css"] // concat app.css last
