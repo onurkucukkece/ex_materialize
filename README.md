@@ -50,14 +50,14 @@ After install you have next structure:
 		
 		|--assets
 		    |--vendor
-				|--materialize
-				   |--css
-				       |--materialize.css
-				       |--materialize.min.css
-				   |--fonts
-				   |--js
-				       |--materialize.js
-				       |--materialize.min.js
+			|--materialize
+			   |--css
+			       |--materialize.css
+			       |--materialize.min.css
+			   |--fonts
+			   |--js
+			       |--materialize.js
+			       |--materialize.min.js
 		...
 		
 Use **materialize-css** in you template project:
