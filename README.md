@@ -49,12 +49,12 @@ After install you have next structure:
 		...
 		
 		|--assets
-		    |--fonts
-			    |--vendor
+		    |--vendor
 				|--materialize
 				   |--css
 				       |--materialize.css
 				       |--materialize.min.css
+				   |--fonts
 				   |--js
 				       |--materialize.js
 				       |--materialize.min.js
